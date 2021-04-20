@@ -66,7 +66,13 @@ export default class Character extends Command {
 
 			Object.values(chars[0].skills).forEach((skill: any) => {
 				let description = skill.map((s: any) => `${DATA.L('Common_Level_X', lang, s.level)} : ${DATA.L(s.description, lang)}`).join('\n');
-				embed = embed.addField(DATA.L(skill[0].name, lang), description);
+
+				let name = DATA.L(skill[0].name, lang);
+				if (skill[0].cooldown > 0) {
+					name += ` (${DATA.L('Battle_Text_Cooldown', lang, `${skill[0].cooldown} / ${skill[0].startingCooldown}`)})`;
+				}
+
+				embed = embed.addField(name, description);
 			})
 
 			embed = embed.setFooter(DATA.L("footer", lang));
