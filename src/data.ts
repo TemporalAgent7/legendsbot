@@ -140,13 +140,14 @@ class StatsModifiers {
 export enum Languages {
 	EN = 'en',
 	DE = 'de',
-	ES = 'es'
+	ES = 'es',
+	FR = 'fr'
 }
 
 class DataClass {
 	private _characters: any[] = [];
-	private _lang: { [key in Languages]: { [key: string]: string } } = { en: {}, de: {}, es: {} };
-	private _bot_lang: { [key in Languages]: { [key: string]: string } } = { en: {}, de: {}, es: {} };
+	private _lang: { [key in Languages]: { [key: string]: string } } = { en: {}, de: {}, es: {}, fr: {} };
+	private _bot_lang: { [key in Languages]: { [key: string]: string } } = { en: {}, de: {}, es: {}, fr: {} };
 	private _statsModifiers = new StatsModifiers();
 
 	cleanupFormats(originalString: string): string {
@@ -168,6 +169,9 @@ class DataClass {
 
 		data = JSON.parse(readFileSync('./data/lang_es_es.json', 'utf8'));
 		data.List.forEach((e: any) => this._lang.es[e.key] = this.cleanupFormats(e.value));
+
+		data = JSON.parse(readFileSync('./data/lang_fr_fr.json', 'utf8'));
+		data.List.forEach((e: any) => this._lang.fr[e.key] = this.cleanupFormats(e.value));
 
 		this._bot_lang = JSON.parse(readFileSync('./data/_bot_localization.json', 'utf8'));
 		Object.values(this._bot_lang).forEach(l => {

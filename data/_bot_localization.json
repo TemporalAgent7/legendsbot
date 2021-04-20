@@ -13,5 +13,10 @@
 		"bridge_skill": "brückenfertigkeit",
 		"stats_note": "Diese Statistiken gelten für <b>Level {0}</b> und <b>Rang {1}</b> ohne Ausrüstungs- oder Partikelboni",
 		"footer": "Haben Sie Empfehlungen für den Bot? Nachricht TemporalAgent7"
+	},
+	"fr": {
+		"bridge_skill": "compétence de pont",
+		"stats_note": "Ces statistiques sont pour le <b>niveau {0}</b> et le <b>rang {1}</b> sans bonus d'équipement ou de particule",
+		"footer": "Vous avez des recommandations pour le bot? Contactez TemporalAgent7"
 	}
 }

@@ -27,9 +27,8 @@ export default class Character extends Command {
 		if (args.length > 1) {
 			level = Number.parseInt(args[1]);
 			if (Number.isNaN(level) || (level < 1) || (level > 99)) {
-				await super.respond(message.channel, `The level should be a number between 1 and 90 (you sent '${args[1]}')`);
+				await super.respond(message.channel, `The level should be a number between 1 and 99 (you sent '${args[1]}')`);
 				return;
-				level = 99;
 			}
 		}
 
@@ -39,7 +38,6 @@ export default class Character extends Command {
 			if (Number.isNaN(rank) || (rank < 1) || (rank > 9)) {
 				await super.respond(message.channel, `The rank should be a number between 1 and 9 (you sent '${args[2]}')`);
 				return;
-				rank = 9;
 			}
 		}
 

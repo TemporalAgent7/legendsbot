@@ -24,6 +24,7 @@ export async function handleCommand(message: Message, command: string, args: str
 				case 'en': lang = Languages.EN; break;
 				case 'de': lang = Languages.DE; break;
 				case 'es': lang = Languages.ES; break;
+				case 'fr': lang = Languages.FR; break;
 				default: lang = Languages.EN;
 			}
 		} else {
