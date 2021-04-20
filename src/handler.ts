@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+import { Message, TextChannel } from "discord.js";
 
 import { Languages } from './data';
 import { Command } from './commands/command';
@@ -17,6 +17,18 @@ export async function handleCommand(message: Message, command: string, args: str
 
 	// Extract the language (if given)
 	let lang = Languages.EN;
+
+	if (message.channel.isText()) {
+		let channelName = (message.channel as TextChannel).name;
+		if (channelName == "french") {
+			lang = Languages.FR;
+		} else if (channelName == "german") {
+			lang = Languages.DE;
+		} else if (channelName == "spanish") {
+			lang = Languages.ES;
+		}
+	}
+
 	let filteredArgs: string[] = [];
 	args.forEach(arg => {
 		if (arg.startsWith('-l')) {
