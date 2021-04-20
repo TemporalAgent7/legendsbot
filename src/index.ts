@@ -12,6 +12,8 @@ DATA.setup();
 
 client.login(process.env.BOT_TOKEN);
 
+let DEV_MODE_GUILD = process.env.DEV_MODE_GUILD;
+
 // Link to invite the bot: https://discord.com/api/oauth2/authorize?client_id=833819108524556410&permissions=18432&scope=bot
 
 client.on('ready', () => {
@@ -32,6 +34,10 @@ client.on('message', (message) => {
 	});
 
 	if (message.author.bot) {
+		return;
+	}
+
+	if (DEV_MODE_GUILD && message.guild?.id != DEV_MODE_GUILD) {
 		return;
 	}
 

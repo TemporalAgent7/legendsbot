@@ -137,23 +137,40 @@ class StatsModifiers {
 	}
 }
 
+export enum Languages {
+	EN = 'en',
+	DE = 'de',
+	ES = 'es'
+}
+
 class DataClass {
 	private _characters: any[] = [];
-	private _lang: any[] = [];
+	private _lang: { [key in Languages]: { [key: string]: string } } = { en: {}, de: {}, es: {} };
 	private _statsModifiers = new StatsModifiers();
+
+	cleanupFormats(originalString: string): string {
+		return originalString.replace(/(<([^>]+)>)/gi, "**");;
+	}
 
 	public setup(): void {
 		this._statsModifiers.setup();
 
 		// TODO: data reloading with bot alive
 		this._characters = JSON.parse(readFileSync('./data/characters.json', 'utf8'));
-		this._lang = JSON.parse(readFileSync('./data/lang_en_us.json', 'utf8'));
 
-		// Localize
-		this._characters.forEach(char => {
-			char.locName = this._lang[char.name];
-			char.locDescription = this._lang[char.description];
-		})
+		// Languages
+		let data = JSON.parse(readFileSync('./data/lang_en_us.json', 'utf8'));
+		data.List.forEach((e: any) => this._lang.en[e.key] = this.cleanupFormats(e.value));
+
+		data = JSON.parse(readFileSync('./data/lang_de_de.json', 'utf8'));
+		data.List.forEach((e: any) => this._lang.de[e.key] = this.cleanupFormats(e.value));
+
+		data = JSON.parse(readFileSync('./data/lang_es_es.json', 'utf8'));
+		data.List.forEach((e: any) => this._lang.es[e.key] = this.cleanupFormats(e.value));
+	}
+
+	public L(key: string, lang: Languages = Languages.EN) {
+		return this._lang[lang][key];
 	}
 
 	public searchCharacter(searchString: string) {
@@ -175,7 +192,7 @@ class DataClass {
 		return found;
 	}
 
-	public charStats(character: any, level: number = 99, rank: number = 9) {
+	public charStats(character: any, level: number = 99, rank: number = 9, lang: Languages = Languages.EN) {
 		let totalPower = Math.floor(this._statsModifiers.getStatValue('GlancingChance', character.GlancingChance, 1).finalPowerValue +
 			this._statsModifiers.getStatValue('GlancingDamage', character.GlancingDamage, 1).finalPowerValue +
 			this._statsModifiers.getStatValue('CritChance', character.CritChance, 1).finalPowerValue +
@@ -187,17 +204,17 @@ class DataClass {
 			this._statsModifiers.get('Tech', character.Tech, character.rarity, level, rank).finalPowerValue +
 			this._statsModifiers.get('Speed', character.Speed, character.rarity, level, rank).finalPowerValue)
 
-		return [{ name: "Total Power", value: totalPower, inline: false },
-		{ name: "Health", value: Math.floor(this._statsModifiers.get('MaxHealth', character.Health, character.rarity, level, rank).baseValue), inline: true },
-		{ name: "Defense", value: Math.floor(this._statsModifiers.get('Defense', character.Defense, character.rarity, level, rank).baseValue), inline: true },
-		{ name: "Attack", value: Math.floor(this._statsModifiers.get('Attack', character.Attack, character.rarity, level, rank).baseValue), inline: true },
-		{ name: "Tech", value: Math.floor(this._statsModifiers.get('Tech', character.Tech, character.rarity, level, rank).baseValue), inline: true },
-		{ name: "Speed", value: Math.floor(this._statsModifiers.get('Speed', character.Speed, character.rarity, level, rank).baseValue), inline: true },
-		{ name: "Glancing Chance", value: `${Math.floor(this._statsModifiers.getStatValue('GlancingChance', character.GlancingChance, 1).baseValue * 100)}%`, inline: true },
-		{ name: "Glancing Damage", value: `${Math.floor(this._statsModifiers.getStatValue('GlancingDamage', character.GlancingDamage, 1).baseValue * 100)}%`, inline: true },
-		{ name: "Crit Chance", value: `${Math.floor(this._statsModifiers.getStatValue('CritChance', character.CritChance, 1).baseValue * 100)}%`, inline: true },
-		{ name: "Crit Damage", value: `${Math.floor(this._statsModifiers.getStatValue('CritDamage', character.CritDamage, 1).baseValue * 100)}%`, inline: true },
-		{ name: "Resolve", value: `${Math.floor(this._statsModifiers.getStatValue('Resolve', character.Resolve, 1).baseValue * 100)}%`, inline: true }];
+		return [{ name: this.L("UI_Common_TotalPower", lang), value: totalPower, inline: false },
+		{ name: this.L("Common_AccessoryStat_Health", lang), value: Math.floor(this._statsModifiers.get('MaxHealth', character.Health, character.rarity, level, rank).baseValue), inline: true },
+		{ name: this.L("Common_AccessoryStat_Defence", lang), value: Math.floor(this._statsModifiers.get('Defense', character.Defense, character.rarity, level, rank).baseValue), inline: true },
+		{ name: this.L("Common_AccessoryStat_Attack", lang), value: Math.floor(this._statsModifiers.get('Attack', character.Attack, character.rarity, level, rank).baseValue), inline: true },
+		{ name: this.L("Common_AccessoryStat_Tech", lang), value: Math.floor(this._statsModifiers.get('Tech', character.Tech, character.rarity, level, rank).baseValue), inline: true },
+		{ name: this.L("Common_AccessoryStat_Speed", lang), value: Math.floor(this._statsModifiers.get('Speed', character.Speed, character.rarity, level, rank).baseValue), inline: true },
+		{ name: this.L("Common_AccessoryStat_GlancingChance", lang), value: `${Math.floor(this._statsModifiers.getStatValue('GlancingChance', character.GlancingChance, 1).baseValue * 100)}%`, inline: true },
+		{ name: this.L("Common_AccessoryStat_GlancingDamage", lang), value: `${Math.floor(this._statsModifiers.getStatValue('GlancingDamage', character.GlancingDamage, 1).baseValue * 100)}%`, inline: true },
+		{ name: this.L("Common_AccessoryStat_CritChance", lang), value: `${Math.floor(this._statsModifiers.getStatValue('CritChance', character.CritChance, 1).baseValue * 100)}%`, inline: true },
+		{ name: this.L("Common_AccessoryStat_CritDamage", lang), value: `${Math.floor(this._statsModifiers.getStatValue('CritDamage', character.CritDamage, 1).baseValue * 100)}%`, inline: true },
+		{ name: this.L("Common_AccessoryStat_Resolve", lang), value: `${Math.floor(this._statsModifiers.getStatValue('Resolve', character.Resolve, 1).baseValue * 100)}%`, inline: true }];
 	}
 }
 

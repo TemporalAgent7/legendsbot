@@ -1,4 +1,5 @@
 import { User, Message, TextChannel, DMChannel, NewsChannel, MessageEmbed, Guild, PermissionString } from 'discord.js';
+import { Languages } from '../data';
 
 export interface CommandOptions {
     name: string;
@@ -95,5 +96,5 @@ export abstract class Command {
      * @param {Message} message The original message object that triggered the command.
      * @param {string[]} args The arguments that got sent with the message.
      */
-    public abstract /*async*/ run(message: Message, args: string[]): Promise<void>;
+    public abstract /*async*/ run(message: Message, lang: Languages, args: string[]): Promise<void>;
 }
