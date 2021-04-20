@@ -100,9 +100,6 @@ class StatsModifiers {
 
 		let baseValue = this.lerpUnclamped(baseStatValue.MinValue, baseStatValue.MaxValue, value) * modifier;
 
-		// TODO: How are these actually calculated !?
-		baseValue = value * modifier;
-
 		let finalValue = baseValue + gearStatChange + accessoryStatChange;
 		finalValue = Math.max(finalValue, type == 'MaxHealth' ? 1 : 0);
 
@@ -154,11 +151,69 @@ class DataClass {
 		return originalString.replace(/(<([^>]+)>)/gi, "**");;
 	}
 
+	loadCharacters(): any[] {
+		let characters = JSON.parse(readFileSync('./data/GSCharacter.json', 'utf8'));
+
+		const skills = JSON.parse(readFileSync('./data/GSSkill.json', 'utf8'));
+		const getSkill = (id: string) => {
+			let found = [];
+			for (const entry of Object.values(skills) as any[]) {
+				if (entry.id.id === id) {
+					let skillEntry = {
+						name: entry.name,
+						description: entry.description,
+						level: entry.level,
+						hidden: entry.hidden,
+						cooldown: entry.cooldown,
+						startingCooldown: entry.startingCooldown,
+						numTargets: entry.numTargets,
+						targetType: entry.targetType,
+						targetState: entry.targetState,
+						isPassive: entry.isPassive,
+						effects: entry.effects,
+						casterEffect: entry.casterEffect,
+						img: entry.img,
+						isSingleTarget: entry.isSingleTarget,
+						isMultiRandom: entry.isMultiRandom,
+						isAOE: entry.isAOE
+					};
+
+					found.push(skillEntry);
+				}
+			}
+
+			return found;
+		}
+
+		let allcrew = [];
+		for (const cr in characters) {
+			if (characters[cr].Type != 'Disabled') {
+				let crew = characters[cr];
+
+				if (characters[cr].BridgeSkill) {
+					crew.bridgeSkill = {};
+					crew.bridgeSkill[characters[cr].BridgeSkill] = getSkill(characters[cr].BridgeSkill);
+				} else {
+					crew.bridgeSkill = undefined;
+				}
+	
+				crew.skills = {};
+				for (let skillId of characters[cr].SkillIDs) {
+					crew.skills[skillId] = getSkill(skillId);
+				}
+
+				allcrew.push(crew);
+			}
+		}
+
+		return allcrew;
+	}
+
 	public setup(): void {
 		this._statsModifiers.setup();
 
 		// TODO: data reloading with bot alive
-		this._characters = JSON.parse(readFileSync('./data/characters.json', 'utf8'));
+		this._characters = this.loadCharacters();
 
 		// Languages
 		let data = JSON.parse(readFileSync('./data/lang_en_us.json', 'utf8'));
@@ -199,22 +254,22 @@ class DataClass {
 	public searchCharacter(searchString: string) {
 		let found = this._characters.filter(
 			c =>
-				c.name.toLowerCase() === searchString.toLowerCase() ||
-				this.L(c.name, Languages.EN).toLowerCase() === searchString.toLowerCase() ||
-				this.L(c.name, Languages.DE).toLowerCase() === searchString.toLowerCase() ||
-				this.L(c.name, Languages.ES).toLowerCase() === searchString.toLowerCase() ||
-				this.L(c.name, Languages.FR).toLowerCase() === searchString.toLowerCase()
+				c.Name.toLowerCase() === searchString.toLowerCase() ||
+				this.L(c.Name, Languages.EN).toLowerCase() === searchString.toLowerCase() ||
+				this.L(c.Name, Languages.DE).toLowerCase() === searchString.toLowerCase() ||
+				this.L(c.Name, Languages.ES).toLowerCase() === searchString.toLowerCase() ||
+				this.L(c.Name, Languages.FR).toLowerCase() === searchString.toLowerCase()
 		);
 
 		if (found && found.length === 1) {
 			return [found[0]];
 		}
 
-		found = this._characters.filter(c => ((c.name.toLowerCase().indexOf(searchString.toLowerCase()) >= 0) ||
-			(this.L(c.name, Languages.EN).toLowerCase().indexOf(searchString.toLowerCase()) >= 0) ||
-			(this.L(c.name, Languages.DE).toLowerCase().indexOf(searchString.toLowerCase()) >= 0) ||
-			(this.L(c.name, Languages.ES).toLowerCase().indexOf(searchString.toLowerCase()) >= 0) ||
-			(this.L(c.name, Languages.FR).toLowerCase().indexOf(searchString.toLowerCase()) >= 0)
+		found = this._characters.filter(c => ((c.Name.toLowerCase().indexOf(searchString.toLowerCase()) >= 0) ||
+			(this.L(c.Name, Languages.EN).toLowerCase().indexOf(searchString.toLowerCase()) >= 0) ||
+			(this.L(c.Name, Languages.DE).toLowerCase().indexOf(searchString.toLowerCase()) >= 0) ||
+			(this.L(c.Name, Languages.ES).toLowerCase().indexOf(searchString.toLowerCase()) >= 0) ||
+			(this.L(c.Name, Languages.FR).toLowerCase().indexOf(searchString.toLowerCase()) >= 0)
 		));
 
 		return found;
@@ -226,18 +281,18 @@ class DataClass {
 			this._statsModifiers.getStatValue('CritChance', character.CritChance, 1).finalPowerValue +
 			this._statsModifiers.getStatValue('CritDamage', character.CritDamage, 1).finalPowerValue +
 			this._statsModifiers.getStatValue('Resolve', character.Resolve, 1).finalPowerValue +
-			this._statsModifiers.get('MaxHealth', character.Health, character.rarity, level, rank).finalPowerValue +
-			this._statsModifiers.get('Defense', character.Defense, character.rarity, level, rank).finalPowerValue +
-			this._statsModifiers.get('Attack', character.Attack, character.rarity, level, rank).finalPowerValue +
-			this._statsModifiers.get('Tech', character.Tech, character.rarity, level, rank).finalPowerValue +
-			this._statsModifiers.get('Speed', character.Speed, character.rarity, level, rank).finalPowerValue)
+			this._statsModifiers.get('MaxHealth', character.Health, character.Rarity, level, rank).finalPowerValue +
+			this._statsModifiers.get('Defense', character.Defense, character.Rarity, level, rank).finalPowerValue +
+			this._statsModifiers.get('Attack', character.Attack, character.Rarity, level, rank).finalPowerValue +
+			this._statsModifiers.get('Tech', character.Tech, character.Rarity, level, rank).finalPowerValue +
+			this._statsModifiers.get('Speed', character.Speed, character.Rarity, level, rank).finalPowerValue)
 
 		return [{ name: this.L("UI_Common_TotalPower", lang), value: totalPower, inline: false },
-		{ name: this.L("Common_AccessoryStat_Health", lang), value: Math.floor(this._statsModifiers.get('MaxHealth', character.Health, character.rarity, level, rank).baseValue), inline: true },
-		{ name: this.L("Common_AccessoryStat_Defence", lang), value: Math.floor(this._statsModifiers.get('Defense', character.Defense, character.rarity, level, rank).baseValue), inline: true },
-		{ name: this.L("Common_AccessoryStat_Attack", lang), value: Math.floor(this._statsModifiers.get('Attack', character.Attack, character.rarity, level, rank).baseValue), inline: true },
-		{ name: this.L("Common_AccessoryStat_Tech", lang), value: Math.floor(this._statsModifiers.get('Tech', character.Tech, character.rarity, level, rank).baseValue), inline: true },
-		{ name: this.L("Common_AccessoryStat_Speed", lang), value: Math.floor(this._statsModifiers.get('Speed', character.Speed, character.rarity, level, rank).baseValue), inline: true },
+		{ name: this.L("Common_AccessoryStat_Health", lang), value: Math.floor(this._statsModifiers.get('MaxHealth', character.Health, character.Rarity, level, rank).baseValue), inline: true },
+		{ name: this.L("Common_AccessoryStat_Defence", lang), value: Math.floor(this._statsModifiers.get('Defense', character.Defense, character.Rarity, level, rank).baseValue), inline: true },
+		{ name: this.L("Common_AccessoryStat_Attack", lang), value: Math.floor(this._statsModifiers.get('Attack', character.Attack, character.Rarity, level, rank).baseValue), inline: true },
+		{ name: this.L("Common_AccessoryStat_Tech", lang), value: Math.floor(this._statsModifiers.get('Tech', character.Tech, character.Rarity, level, rank).baseValue), inline: true },
+		{ name: this.L("Common_AccessoryStat_Speed", lang), value: Math.floor(this._statsModifiers.get('Speed', character.Speed, character.Rarity, level, rank).baseValue), inline: true },
 		{ name: this.L("Common_AccessoryStat_GlancingChance", lang), value: `${Math.floor(this._statsModifiers.getStatValue('GlancingChance', character.GlancingChance, 1).baseValue * 100)}%`, inline: true },
 		{ name: this.L("Common_AccessoryStat_GlancingDamage", lang), value: `${Math.floor(this._statsModifiers.getStatValue('GlancingDamage', character.GlancingDamage, 1).baseValue * 100)}%`, inline: true },
 		{ name: this.L("Common_AccessoryStat_CritChance", lang), value: `${Math.floor(this._statsModifiers.getStatValue('CritChance', character.CritChance, 1).baseValue * 100)}%`, inline: true },

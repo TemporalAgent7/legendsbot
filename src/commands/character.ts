@@ -44,20 +44,20 @@ export default class Character extends Command {
 		let chars = DATA.searchCharacter(args[0]);
 		if (chars && chars.length > 0) {
 			if (chars.length > 1) {
-				await super.respond(message.channel, `There are multiple characters matching '${args[0]}': ${chars.map(c => DATA.L(c.name, lang)).join(', ')}. Which one did you mean?`);
+				await super.respond(message.channel, `There are multiple characters matching '${args[0]}': ${chars.map(c => DATA.L(c.Name, lang)).join(', ')}. Which one did you mean?`);
 				return;
 			}
 
 			let embed = new MessageEmbed()
-				.setTitle(DATA.L(chars[0].name, lang))
+				.setTitle(DATA.L(chars[0].Name, lang))
 				.setURL('https://legends.datacore.app/')
-				.setThumbnail(`https://legends.datacore.app/assets/${chars[0].icon}.png`)
-				.setColor(colorFromRarity(chars[0].computed_rarity))
-				.setDescription(DATA.L(chars[0].description, lang) + '\n' + DATA.L('stats_note', lang, level, rank))
-				.addField(DATA.L('Common_CharacterSortingType_Role', lang), DATA.L('Common_CharacterRole_' + chars[0].role, lang), true)
-				.addField(DATA.L('UI_BridgeCrew_Popup_Title', lang), chars[0].bridgeStations.map((s: string) => DATA.L('UI_BridgeStation_' + s, lang)).join(', '), true)
+				.setThumbnail(`https://legends.datacore.app/assets/${chars[0].Icon}.png`)
+				.setColor(colorFromRarity(chars[0].Rarity))
+				.setDescription(DATA.L(chars[0].Description, lang) + '\n' + DATA.L('stats_note', lang, level, rank))
+				.addField(DATA.L('Common_CharacterSortingType_Role', lang), DATA.L('Common_CharacterRole_' + chars[0].Role, lang), true)
+				.addField(DATA.L('UI_BridgeCrew_Popup_Title', lang), chars[0].BridgeStations.map((s: string) => DATA.L('UI_BridgeStation_' + s, lang)).join(', '), true)
 				.addFields(DATA.charStats(chars[0], level, rank, lang))
-				.addField(DATA.L('Data_Tooltip_HeroInfo_Tags_headerText', lang), chars[0].tags.map((s: string) => DATA.L('Common_Tag_' + s, lang)).join(', '), true);
+				.addField(DATA.L('Data_Tooltip_HeroInfo_Tags_headerText', lang), chars[0].Tags.map((s: string) => DATA.L('Common_Tag_' + s, lang)).join(', '), true);
 
 			if (chars[0].bridgeSkill) {
 				let bSkill: any = (Object.values(chars[0].bridgeSkill)[0] as any[])[0];

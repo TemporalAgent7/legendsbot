@@ -9,21 +9,21 @@ export function parseCommandInput(input: string): readonly string[] {
 	return args.map((arg) => arg.replace(/"/g, '').replace(/'/g, '').trim()).filter((arg) => arg);
 }
 
-export function colorFromRarity(rarity: number): 'LIGHT_GREY' | [number, number, number] {
+export function colorFromRarity(rarity: string): 'LIGHT_GREY' | [number, number, number] {
 	switch (rarity) {
-		case 1: // Common
+		case "Common":
 			return [0, 0.9764706 * 255, 1];
 
-		case 2: // Rare
+		case "Rare":
 			return [0.223529413 * 255, 0.917647064 * 255, 0.403921574 * 255];
 
-		case 3: // VeryRare
+		case "VeryRare":
 			return [0.9882353 * 255, 0.58431375 * 255, 0.219607845 * 255];
 
-		case 4: // Epic
+		case "Epic":
 			return [0.772549033 * 255, 0.34117648 * 255, 255];
 
-		case 5: // Legendary
+		case "Legendary":
 			return [0.8980392 * 255, 0.78039217 * 255, 0.20784314 * 255];
 
 		default:
