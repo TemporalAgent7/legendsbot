@@ -146,6 +146,7 @@ export enum Languages {
 class DataClass {
 	private _characters: any[] = [];
 	private _lang: { [key in Languages]: { [key: string]: string } } = { en: {}, de: {}, es: {} };
+	private _bot_lang: { [key in Languages]: { [key: string]: string } } = { en: {}, de: {}, es: {} };
 	private _statsModifiers = new StatsModifiers();
 
 	cleanupFormats(originalString: string): string {
@@ -167,10 +168,28 @@ class DataClass {
 
 		data = JSON.parse(readFileSync('./data/lang_es_es.json', 'utf8'));
 		data.List.forEach((e: any) => this._lang.es[e.key] = this.cleanupFormats(e.value));
+
+		this._bot_lang = JSON.parse(readFileSync('./data/_bot_localization.json', 'utf8'));
+		Object.values(this._bot_lang).forEach(l => {
+			Object.keys(l).forEach(k => {
+				l[k] = this.cleanupFormats(l[k]);
+			})
+		});
 	}
 
-	public L(key: string, lang: Languages = Languages.EN) {
-		return this._lang[lang][key];
+	public L(key: string, lang: Languages, ...arg: any[]) {
+		let value = "NEEDS_LOCALIZATION: " + key;
+		if (this._lang[lang][key]) {
+			value = this._lang[lang][key];
+		} else if (this._bot_lang[lang][key]) {
+			value = this._bot_lang[lang][key];
+		}
+
+		arg.forEach((val, idx) => {
+			value = value.replace(`{${idx}}`, val);
+		})
+
+		return value;
 	}
 
 	public searchCharacter(searchString: string) {

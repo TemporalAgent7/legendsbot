@@ -55,7 +55,7 @@ export default class Character extends Command {
 				.setURL('https://legends.datacore.app/')
 				.setThumbnail(`https://legends.datacore.app/assets/${chars[0].icon}.png`)
 				.setColor(colorFromRarity(chars[0].computed_rarity))
-				.setDescription(DATA.L(chars[0].description, lang) + `\nThese stats are for **level ${level}** and **rank ${rank}** with no gear or particle bonuses`)
+				.setDescription(DATA.L(chars[0].description, lang) + '\n' + DATA.L('stats_note', lang, level, rank))
 				.addField(DATA.L('Common_CharacterSortingType_Role', lang), DATA.L('Common_CharacterRole_' + chars[0].role, lang), true)
 				.addField(DATA.L('UI_BridgeCrew_Popup_Title', lang), chars[0].bridgeStations.map((s: string) => DATA.L('UI_BridgeStation_' + s, lang)).join(', '), true)
 				.addFields(DATA.charStats(chars[0], level, rank, lang))
@@ -63,15 +63,15 @@ export default class Character extends Command {
 
 			if (chars[0].bridgeSkill) {
 				let bSkill: any = (Object.values(chars[0].bridgeSkill)[0] as any[])[0];
-				embed = embed.addField(DATA.L(bSkill.name, lang) + ' (bridge skill)', DATA.L(bSkill.description, lang));
+				embed = embed.addField(`${DATA.L(bSkill.name, lang)} (${DATA.L('bridge_skill', lang)})`, DATA.L(bSkill.description, lang));
 			}
 
 			Object.values(chars[0].skills).forEach((skill: any) => {
-				let description = skill.map((s: any) => `${DATA.L('Common_Level_X', lang).replace('{0}', s.level)} : ${DATA.L(s.description, lang)}`).join('\n');
+				let description = skill.map((s: any) => `${DATA.L('Common_Level_X', lang, s.level)} : ${DATA.L(s.description, lang)}`).join('\n');
 				embed = embed.addField(DATA.L(skill[0].name, lang), description);
 			})
 
-			embed = embed.setFooter('Have recommendations for the bot? Ping TemporalAgent7');
+			embed = embed.setFooter(DATA.L("footer", lang));
 
 			await super.respond(message.channel, embed);
 			return;

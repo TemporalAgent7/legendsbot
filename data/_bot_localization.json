@@ -1,0 +1,17 @@
+{
+	"en": {
+		"bridge_skill": "bridge skill",
+		"stats_note": "These stats are for <b>level {0}</b> and <b>rank {1}</b> with no gear or particle bonuses",
+		"footer": "Have recommendations for the bot? Ping TemporalAgent7"
+	},
+	"es": {
+		"bridge_skill": "habilidad puente",
+		"stats_note": "Estos datos son para el <b>nivel {0}</b> y <b>rango {1}</b>, sin bonos de objetos ni partículas",
+		"footer": "¿Tienes alguna recomendación para el bot? Etiqueta a TemporalAgent7"
+	},
+	"de": {
+		"bridge_skill": "brückenfertigkeit",
+		"stats_note": "Diese Statistiken gelten für <b>Level {0}</b> und <b>Rang {1}</b> ohne Ausrüstungs- oder Partikelboni",
+		"footer": "Haben Sie Empfehlungen für den Bot? Nachricht TemporalAgent7"
+	}
+}
