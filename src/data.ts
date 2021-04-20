@@ -200,18 +200,23 @@ class DataClass {
 		let found = this._characters.filter(
 			c =>
 				c.name.toLowerCase() === searchString.toLowerCase() ||
-				c.name
-					.replace(/"/g, '')
-					.replace(/'/g, '')
-					.replace(/“/g, '')
-					.replace(/’/g, '')
-					.toLowerCase() === searchString.toLowerCase()
+				this.L(c.name, Languages.EN).toLowerCase() === searchString.toLowerCase() ||
+				this.L(c.name, Languages.DE).toLowerCase() === searchString.toLowerCase() ||
+				this.L(c.name, Languages.ES).toLowerCase() === searchString.toLowerCase() ||
+				this.L(c.name, Languages.FR).toLowerCase() === searchString.toLowerCase()
 		);
+
 		if (found && found.length === 1) {
 			return [found[0]];
 		}
 
-		found = this._characters.filter(c => c.name.toLowerCase().indexOf(searchString.toLowerCase()) >= 0);
+		found = this._characters.filter(c => ((c.name.toLowerCase().indexOf(searchString.toLowerCase()) >= 0) ||
+			(this.L(c.name, Languages.EN).toLowerCase().indexOf(searchString.toLowerCase()) >= 0) ||
+			(this.L(c.name, Languages.DE).toLowerCase().indexOf(searchString.toLowerCase()) >= 0) ||
+			(this.L(c.name, Languages.ES).toLowerCase().indexOf(searchString.toLowerCase()) >= 0) ||
+			(this.L(c.name, Languages.FR).toLowerCase().indexOf(searchString.toLowerCase()) >= 0)
+		));
+
 		return found;
 	}
 
