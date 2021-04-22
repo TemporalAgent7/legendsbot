@@ -50,7 +50,7 @@ export default class Character extends Command {
 
 			let embed = new MessageEmbed()
 				.setTitle(DATA.L(chars[0].Name, lang))
-				.setURL('https://legends.datacore.app/')
+				.setURL('https://legends.datacore.app/character/' + chars[0].id)
 				.setThumbnail(`https://legends.datacore.app/assets/${chars[0].Icon}.png`)
 				.setColor(colorFromRarity(chars[0].Rarity))
 				.setDescription(DATA.L(chars[0].Description, lang) + '\n' + DATA.L('stats_note', lang, level, rank))
