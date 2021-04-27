@@ -3,9 +3,13 @@ import { Message, TextChannel } from "discord.js";
 import { Languages } from './data';
 import { Command } from './commands/command';
 import Character from './commands/character';
+import Mission from './commands/mission';
+import Help from './commands/help';
 
-const COMMANDS: Command[] = [
-	new Character()
+export const COMMANDS: Command[] = [
+	new Character(),
+	new Mission(),
+	new Help()
 ];
 
 export async function handleCommand(message: Message, command: string, args: string[]) {

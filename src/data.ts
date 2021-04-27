@@ -143,6 +143,7 @@ export enum Languages {
 
 class DataClass {
 	private _characters: any[] = [];
+	private _episodes: any[] = [];
 	private _lang: { [key in Languages]: { [key: string]: string } } = { en: {}, de: {}, es: {}, fr: {} };
 	private _bot_lang: { [key in Languages]: { [key: string]: string } } = { en: {}, de: {}, es: {}, fr: {} };
 	private _statsModifiers = new StatsModifiers();
@@ -196,7 +197,7 @@ class DataClass {
 				} else {
 					crew.bridgeSkill = undefined;
 				}
-	
+
 				crew.skills = {};
 				for (let skillId of characters[cr].SkillIDs) {
 					crew.skills[skillId] = getSkill(skillId);
@@ -212,8 +213,9 @@ class DataClass {
 	public setup(): void {
 		this._statsModifiers.setup();
 
-		// TODO: data reloading with bot alive
+		// TODO: data reloading with bot alive (chokidar)
 		this._characters = this.loadCharacters();
+		this._episodes = JSON.parse(readFileSync('./data/episodes.json', 'utf8'));
 
 		// Languages
 		let data = JSON.parse(readFileSync('./data/lang_en_us.json', 'utf8'));
@@ -249,6 +251,20 @@ class DataClass {
 		})
 
 		return value;
+	}
+
+	public getMission(episode: number, mission: number) {
+		let ep = this._episodes.find(ep => ep.id == `episode ${episode}`);
+		if (!ep) {
+			return undefined;
+		}
+
+		let miss = ep.missions.find((ms: any) => ms.id == `episode ${episode} mission ${mission}`);
+		if (miss) {
+			miss.backgroundImage = ep.backgroundImage;
+		}
+
+		return miss;
 	}
 
 	public searchCharacter(searchString: string) {

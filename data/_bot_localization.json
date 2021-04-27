@@ -2,21 +2,29 @@
 	"en": {
 		"bridge_skill": "bridge skill",
 		"stats_note": "These stats are for <b>level {0}</b> and <b>rank {1}</b> with no gear or particle bonuses",
-		"footer": "Have recommendations for the bot? Ping TemporalAgent7"
+		"footer": "Have recommendations for the bot? Ping TemporalAgent7",
+		"suggested_power": "Suggested Power",
+		"prof_100": "Role proficiency needed to finish 100%"
 	},
 	"es": {
 		"bridge_skill": "habilidad puente",
 		"stats_note": "Estos datos son para el <b>nivel {0}</b> y <b>rango {1}</b>, sin bonos de objetos ni partículas",
-		"footer": "¿Tienes alguna recomendación para el bot? Etiqueta a TemporalAgent7"
+		"footer": "¿Tienes alguna recomendación para el bot? Etiqueta a TemporalAgent7",
+		"suggested_power": "Poder sugerido",
+		"prof_100": "Dominio del rol necesario para terminar al 100%"
 	},
 	"de": {
 		"bridge_skill": "brückenfertigkeit",
 		"stats_note": "Diese Statistiken gelten für <b>Level {0}</b> und <b>Rang {1}</b> ohne Ausrüstungs- oder Partikelboni",
-		"footer": "Haben Sie Empfehlungen für den Bot? Nachricht TemporalAgent7"
+		"footer": "Haben Sie Empfehlungen für den Bot? Nachricht TemporalAgent7",
+		"suggested_power": "Vorgeschlagene Leistung",
+		"prof_100": "Rollenkenntnisse erforderlich, um 100% zu beenden"
 	},
 	"fr": {
 		"bridge_skill": "compétence de pont",
 		"stats_note": "Ces statistiques sont pour le <b>niveau {0}</b> et le <b>rang {1}</b> sans bonus d'équipement ou de particule",
-		"footer": "Vous avez des recommandations pour le bot? Contactez TemporalAgent7"
+		"footer": "Vous avez des recommandations pour le bot? Contactez TemporalAgent7",
+		"suggested_power": "Puissance suggérée",
+		"prof_100": "Maîtrise du rôle nécessaire pour terminer à 100%"
 	}
 }
