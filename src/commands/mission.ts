@@ -44,8 +44,8 @@ export default class Mission extends Command {
 		}
 
 		let episode = Number.parseInt(args[0].replace(/\D/g, ''));
-		if (Number.isNaN(episode) || (episode < 1) || (episode > 6)) {
-			await super.respond(message.channel, `The episode should be a number between 1 and 6 (you sent '${args[0]}')`);
+		if (Number.isNaN(episode) || (episode < 1) || (episode > 7)) {
+			await super.respond(message.channel, `The episode should be a number between 1 and 7 (you sent '${args[0]}')`);
 			return;
 		}
 
